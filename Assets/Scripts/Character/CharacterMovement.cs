@@ -1,9 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using CharacterMovements;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -16,75 +18,82 @@ public class CharacterMovement : MonoBehaviour
     [SerializeField] private float slidingGravityIncrease;
 
     private Rigidbody _rigidbody;
-    private bool _isGrounded, _isSliding, _isOnOil;
+    private HashSet<int> _groundCollision;
+    private bool _isGrounded, _isOnOil;
+    
+    public int PlayerID { get; set; }
 
     // Start is called before the first frame update
     void Start()
     {
+        _groundCollision = new HashSet<int>();
         _rigidbody = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        HandleGravityChanges();
+        // HandleGravityChanges();
         HandlePlaneMovement();
         HandleJumpMovement();
         HandleOilDamageMovement();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        HandleSurfaceEnter(other.gameObject);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        HandleSurfaceExit(other.gameObject);
+    }
+
     void OnCollisionEnter(Collision collision)
     {
-        HandleSurfaceOnCollisionEnter(collision);
+        HandleSurfaceEnter(collision.gameObject);
     }
 
     void OnCollisionExit(Collision collision)
     {
-        HandleSurfaceOnCollisionExit(collision);
+        HandleSurfaceExit(collision.gameObject);
     }
 
     private void HandlePlaneMovement()
     {
-        var horizontalInput = Input.GetAxis("Horizontal");
-        var verticalInput = Input.GetAxis("Vertical");
+        var axes = LookupAxes();
+        var horizontalInput = Input.GetAxis(axes.Item1);
+        var verticalInput = Input.GetAxis(axes.Item2);
 
         if (horizontalInput == 0 && verticalInput == 0) return;
 
         var movement = new Vector3(horizontalInput, 0, verticalInput);
         var movementDelta = movement * (moveSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.15f);
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(movement), 0.09f);
         transform.Translate(movementDelta, Space.World);
     }
 
-    private void HandleGravityChanges()
-    {
-        var gravity = Physics.gravity;
-        if (!_isSliding && gravity.y < -9.8f)
-        {
-            Physics.gravity = new Vector3(0, -9.8f, 0);
-            return;
-        }
-
-        Physics.gravity = new Vector3(0, gravity.y * slidingGravityIncrease, 0);
-    }
+    // private void HandleGravityChanges()
+    // {
+    //     var gravity = Physics.gravity;
+    //     if (!_isSliding && gravity.y < -9.8f)
+    //     {
+    //         Physics.gravity = new Vector3(0, -9.8f, 0);
+    //         return;
+    //     }
+    //
+    //     Physics.gravity = new Vector3(0, gravity.y * slidingGravityIncrease, 0);
+    // }
 
     private void HandleJumpMovement()
     {
-        var jumpInput = Input.GetButtonDown("Jump");
+        var axis = LookupJump();
+        var jumpInput = Input.GetButtonDown(axis);
 
-        if (!jumpInput) return;
+        if (!jumpInput || !_isGrounded) return;
 
         var movement = new Vector3(0, jumpSpeed, 0);
-
-        if (_isSliding)
-        {
-            _rigidbody.AddForce(movement);
-        }
-
-        if (_isGrounded)
-        {
-            _rigidbody.AddForce(movement);
-        }
+        _rigidbody.AddForce(movement);
     }
 
     private void HandleOilDamageMovement()
@@ -95,51 +104,63 @@ public class CharacterMovement : MonoBehaviour
         _rigidbody.AddForce(force);
     }
 
-    private void HandleSurfaceOnCollisionEnter(Collision collision)
+    private void HandleSurfaceEnter(GameObject gameObj)
     {
-        var surface = collision.gameObject.GetComponent<ISurface>();
+        var surface = gameObj.GetComponent<ISurface>();
         if (surface == null) return;
 
         switch (surface.GetSurfaceType())
         {
             case SurfaceType.Ground:
+                _groundCollision.Add(gameObj.GetInstanceID());
                 _isGrounded = true;
                 break;
 
-            case SurfaceType.Sliding:
-                _isSliding = true;
-                break;
-            
+            // case SurfaceType.Sliding:
+            //     _isSliding = true;
+            //     break;
+
             case SurfaceType.Oil:
                 _isOnOil = true;
                 break;
-            
+
             default:
                 return;
         }
     }
 
-    private void HandleSurfaceOnCollisionExit(Collision collision)
+    private void HandleSurfaceExit(GameObject gameObj)
     {
-        var surface = collision.gameObject.GetComponent<ISurface>();
+        var surface = gameObj.GetComponent<ISurface>();
         if (surface == null) return;
 
         switch (surface.GetSurfaceType())
         {
             case SurfaceType.Ground:
-                _isGrounded = false;
+                _groundCollision.Remove(gameObj.GetInstanceID());
+                _isGrounded = _groundCollision.Count != 0;
                 break;
 
-            case SurfaceType.Sliding:
-                _isSliding = false;
-                break;
-            
+            // case SurfaceType.Sliding:
+            //     _isSliding = false;
+            //     break;
+
             case SurfaceType.Oil:
                 _isOnOil = false;
                 break;
-            
+
             default:
                 return;
         }
+    }
+
+    private (string, string) LookupAxes()
+    {
+        return ("Horizontal" + PlayerID, "Vertical" + PlayerID);
+    }
+
+    private string LookupJump()
+    {
+        return "Jump" + PlayerID;
     }
 }
