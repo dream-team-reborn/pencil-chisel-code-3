@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3007086256435548962}
   - component: {fileID: 7510700577540120878}
   - component: {fileID: 3556149396002401218}
+  - component: {fileID: 6165737419289249764}
   m_Layer: 0
   m_Name: Oil
   m_TagString: Untagged
@@ -122,3 +123,15 @@ MonoBehaviour:
   speed: 0.05
   startingY: -2.8
   maxY: 0.35
+--- !u!114 &6165737419289249764
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6084500147929048357}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8567c3dbd0bc2a4c91515bd866aa897, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
