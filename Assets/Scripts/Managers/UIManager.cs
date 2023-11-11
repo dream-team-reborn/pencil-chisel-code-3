@@ -30,7 +30,7 @@ public class UIManager : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -51,6 +51,19 @@ public class UIManager : MonoBehaviour
         switch (buttonName)
         {
             case "1 Player":
+                playerLabel.text = "Players: 1";
+                break;
+
+            case "2 Players":
+                playerLabel.text = "Players: 2";
+                break;
+
+            case "3 Players":
+                playerLabel.text = "Players: 3";
+                break;
+
+            case "4 Players":
+                playerLabel.text = "Players: 4";
                 break;
         }
     }
