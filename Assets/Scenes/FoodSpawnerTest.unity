@@ -344,9 +344,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40f67ff798936842b590bdedf5bc698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabsToSpawn:
+  platformsToSpawn:
   - {fileID: 3265838758246562719, guid: 3f36ce9af6a624c0b829f478bb8ad079, type: 3}
+  obstaclesToSpawn:
   - {fileID: 3265838758246562719, guid: f24f3da0b8d2445349fe3cdf11685f84, type: 3}
+  platformOverObstaclesPercentage: 0.1
+  platformSpawnWaitMin: 0.5
+  platformSpawnWaitMax: 2
+  obstaclesSpawnWaitMin: 0.1
+  obstaclesSpawnWaitMax: 0.5
   spawnAreaTransform: {fileID: 0}
 --- !u!1 &1696128059
 GameObject:
