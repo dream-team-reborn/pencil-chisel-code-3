@@ -9,7 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1616481716388200561}
+  - component: {fileID: 5265494531712043793}
   - component: {fileID: 4821264950071032044}
+  - component: {fileID: 6981400955796738840}
   - component: {fileID: 3614843076357583372}
   - component: {fileID: 8681256915783628253}
   m_Layer: 0
@@ -35,6 +37,18 @@ Transform:
   - {fileID: 7798398072351765836}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5265494531712043793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3265838758246562719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86f66421608adaa45b0422c98ba32a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4821264950071032044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -51,6 +65,20 @@ MonoBehaviour:
   jumpSpeed: 300
   damageJumpForce: 10
   slidingGravityIncrease: 1.05
+--- !u!114 &6981400955796738840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3265838758246562719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a7c8fd0ee25a4e4584ba26ef268f246, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxDamageAmount: 3
+  _damageImmunitySeconds: 5
 --- !u!136 &3614843076357583372
 CapsuleCollider:
   m_ObjectHideFlags: 0

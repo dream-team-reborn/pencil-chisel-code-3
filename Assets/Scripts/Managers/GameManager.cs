@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private Vector3[] spawnPositions;
     
-    private List<GameObject> playerCharacters = new List<GameObject>();
+    private List<Character> playerCharacters = new List<Character>();
     private MoveUp oil;
 
     void OnEnable()
@@ -103,10 +103,9 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < playerNumber; i++)
         {
-            GameObject newPlayer = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity);
-            newPlayer.GetComponent<CharacterMovement>().PlayerID = i;
+            Character newPlayer = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity).GetComponent<Character>();
+            newPlayer.Initialize(i);
             playerCharacters.Add(newPlayer);
-
         }
 
         oil = FindObjectOfType<MoveUp>();
@@ -117,5 +116,23 @@ public class GameManager : MonoBehaviour
     {
         playerNumber = 0;
         oil.StopMovement();
+    }
+
+    public void OnCharacterDied(int playerID)
+    {
+        for (int i = playerCharacters.Count - 1; i >= 0; i--)
+        {
+            if (playerCharacters[i].PlayerID != playerID)
+                continue;
+
+            GameObject playerGO = playerCharacters[i].gameObject;
+            playerCharacters.RemoveAt(i);
+            Destroy(playerGO);
+        }
+
+        if (playerCharacters.Count == 0)
+        {
+            EndMatch();
+        }
     }
 }

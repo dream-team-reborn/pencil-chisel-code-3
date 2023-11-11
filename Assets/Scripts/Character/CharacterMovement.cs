@@ -17,15 +17,16 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private float slidingGravityIncrease;
 
+    private Character _character;
+
     private Rigidbody _rigidbody;
     private HashSet<int> _groundCollision;
     private bool _isGrounded, _isOnOil;
     
-    public int PlayerID { get; set; }
-
     // Start is called before the first frame update
     void Start()
     {
+        _character = GetComponent<Character>();
         _groundCollision = new HashSet<int>();
         _rigidbody = GetComponent<Rigidbody>();
     }
@@ -156,11 +157,11 @@ public class CharacterMovement : MonoBehaviour
 
     private (string, string) LookupAxes()
     {
-        return ("Horizontal" + PlayerID, "Vertical" + PlayerID);
+        return ("Horizontal" + _character.PlayerID, "Vertical" + _character.PlayerID);
     }
 
     private string LookupJump()
     {
-        return "Jump" + PlayerID;
+        return "Jump" + _character.PlayerID;
     }
 }
