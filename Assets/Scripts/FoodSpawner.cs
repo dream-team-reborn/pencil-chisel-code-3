@@ -46,6 +46,7 @@ public class SpawnObjectOnSpace : MonoBehaviour
     public void StopSpawning()
     {
         _isSpawnActive = false;
+        CleanSpawnedObjects();
     }
 
     private void SpawnPrefab()
