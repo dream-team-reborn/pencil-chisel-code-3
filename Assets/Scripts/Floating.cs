@@ -7,7 +7,7 @@ public class Floating : MonoBehaviour
     public float floatHeightPercentage = 0.1f;
 
 
-    [SerializeField] private Transform waterObject;
+    public Transform waterObject;
 
     private void Update()
     {

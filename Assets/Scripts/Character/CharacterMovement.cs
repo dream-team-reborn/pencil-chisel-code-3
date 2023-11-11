@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using CharacterMovements;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 public class CharacterMovement : MonoBehaviour
 {
@@ -15,10 +10,10 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private float damageJumpForce;
 
-    [SerializeField] private float slidingGravityIncrease;
+    // [SerializeField] private float slidingGravityIncrease;
 
     private Character _character;
-
+    private Animator _animator;
     private Rigidbody _rigidbody;
     private HashSet<int> _groundCollision;
     private bool _isGrounded, _isOnOil;
@@ -26,9 +21,14 @@ public class CharacterMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _character = GetComponent<Character>();
         _groundCollision = new HashSet<int>();
+    }
+
+    private void Awake()
+    {
+        _character = GetComponent<Character>();
         _rigidbody = GetComponent<Rigidbody>();
+        _animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -55,18 +55,23 @@ public class CharacterMovement : MonoBehaviour
         HandleSurfaceEnter(collision.gameObject);
     }
 
-    void OnCollisionExit(Collision collision)
+    void OnCollisionExit(Collision collision) 
     {
         HandleSurfaceExit(collision.gameObject);
     }
 
-    private void HandlePlaneMovement()
+    private void HandlePlaneMovement() 
     {
         var axes = LookupAxes();
         var horizontalInput = Input.GetAxis(axes.Item1);
         var verticalInput = Input.GetAxis(axes.Item2);
 
-        if (horizontalInput == 0 && verticalInput == 0) return;
+        if (horizontalInput == 0 && verticalInput == 0)
+        {
+            _animator.Play("Idle");
+            return;
+        }
+        _animator.Play("Run");
 
         var movement = new Vector3(horizontalInput, 0, verticalInput);
         var movementDelta = movement * (moveSpeed * Time.deltaTime);

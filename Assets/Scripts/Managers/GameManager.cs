@@ -116,6 +116,7 @@ public class GameManager : MonoBehaviour
     {
         playerNumber = 0;
         oil.StopMovement();
+        SceneManager.LoadScene("Menu");
     }
 
     public void OnCharacterDied(int playerID)
