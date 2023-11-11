@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class SpawnObjectOnSpace : MonoBehaviour
 {
@@ -19,7 +20,9 @@ public class SpawnObjectOnSpace : MonoBehaviour
     public enum FoodType { PLATFORM, OBSTACLE }
 
     private Dictionary<FoodType, GameObject[]> foodMap;
-    
+
+    [SerializeField] private Transform waterObject;
+
     void Start()
     {
         foodMap =   new Dictionary<FoodType, GameObject[]> 
@@ -52,7 +55,9 @@ public class SpawnObjectOnSpace : MonoBehaviour
 
             // Generate a random position within the cube bounds
             Vector3 randomPosition = GetRandomPositionInBounds(spawnArea);
-            Instantiate(platformsSelection[randomIndex], randomPosition, Quaternion.identity);
+            Debug.Log(randomPosition);
+            Object objectSpawned = Instantiate(platformsSelection[randomIndex], randomPosition, Quaternion.identity);
+            objectSpawned.GetComponent<Floating>().waterObject = waterObject;
         }
 
         return foodTypeSelected;
