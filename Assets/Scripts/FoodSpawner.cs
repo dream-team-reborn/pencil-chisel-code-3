@@ -1,35 +1,69 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class SpawnObjectOnSpace : MonoBehaviour
 {
-    public GameObject[] prefabsToSpawn;
+    public GameObject[] platformsToSpawn;
+    public GameObject[] obstaclesToSpawn;
+    public float platformOverObstaclesPercentage = 0.1f;
+    public float platformSpawnWaitMin = 3f;
+    public float platformSpawnWaitMax = 5f;
+    public float obstaclesSpawnWaitMin = 0.1f;
+    public float obstaclesSpawnWaitMax = 0.5f;
     // Reference to the cube transform
     public Transform spawnAreaTransform;
     private Bounds spawnArea;
+    private float lastSpawnTime = -1; 
+    private float nextSpawnIn = 0f;
 
+    public enum FoodType { PLATFORM, OBSTACLE }
+
+    private Dictionary<FoodType, GameObject[]> foodMap;
+    
     void Start()
     {
+        foodMap =   new Dictionary<FoodType, GameObject[]> 
+            { { FoodType.PLATFORM, platformsToSpawn }, { FoodType.OBSTACLE, obstaclesToSpawn } };
         spawnArea = GetTransformBounds(transform.Find("SpawnArea"));
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        float currentTime = Time.time;
+        if ((currentTime - lastSpawnTime) > nextSpawnIn)
         {
-            SpawnPrefab();
+            lastSpawnTime = currentTime;
+            switch (SpawnPrefab()) 
+            {
+                case FoodType.PLATFORM: nextSpawnIn = Random.Range(platformSpawnWaitMin, platformSpawnWaitMax); break;
+                case FoodType.OBSTACLE: nextSpawnIn = Random.Range(obstaclesSpawnWaitMin, obstaclesSpawnWaitMax); break;
+            }
         }
     }
 
-    void SpawnPrefab()
+    FoodType SpawnPrefab()
     {
-        int randomIndex = Random.Range(0, prefabsToSpawn.Length);
+        FoodType foodTypeSelected = SelectFoodType();
 
-        // Generate a random position within the cube bounds
-        Vector3 randomPosition = GetRandomPositionInBounds(spawnArea);
-        Instantiate(prefabsToSpawn[randomIndex], randomPosition , Quaternion.identity);
+        GameObject[] platformsSelection = foodMap[foodTypeSelected];
+        if (platformsSelection != null)
+        {
+            int randomIndex = Random.Range(0, platformsSelection.Length - 1);
+
+            // Generate a random position within the cube bounds
+            Vector3 randomPosition = GetRandomPositionInBounds(spawnArea);
+            Instantiate(platformsSelection[randomIndex], randomPosition, Quaternion.identity);
+        }
+
+        return foodTypeSelected;
     }
 
-
+    FoodType SelectFoodType()
+    {
+        double randomValue = UnityEngine.Random.value;
+        return randomValue <= platformOverObstaclesPercentage ? FoodType.PLATFORM : FoodType.OBSTACLE;
+    }
+    
     Bounds GetTransformBounds(Transform objTransform)
     {
         // Get the bounds of the object (in local space)
