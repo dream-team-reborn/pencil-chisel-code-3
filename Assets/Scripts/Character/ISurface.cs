@@ -3,7 +3,8 @@ namespace CharacterMovements
     public enum SurfaceType
     {
         Sliding,
-        Ground
+        Ground,
+        Oil
     }
     
     public interface ISurface

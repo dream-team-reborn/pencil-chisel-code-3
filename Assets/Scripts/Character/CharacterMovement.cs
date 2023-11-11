@@ -11,10 +11,12 @@ public class CharacterMovement : MonoBehaviour
 
     [SerializeField] private float jumpSpeed;
 
+    [SerializeField] private float damageJumpForce;
+
     [SerializeField] private float slidingGravityIncrease;
 
     private Rigidbody _rigidbody;
-    private bool _isGrounded, _isSliding;
+    private bool _isGrounded, _isSliding, _isOnOil;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +30,7 @@ public class CharacterMovement : MonoBehaviour
         HandleGravityChanges();
         HandlePlaneMovement();
         HandleJumpMovement();
+        HandleOilDamageMovement();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -84,6 +87,14 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+    private void HandleOilDamageMovement()
+    {
+        if (!_isOnOil) return;
+
+        var force = new Vector3(0, damageJumpForce, 0);
+        _rigidbody.AddForce(force);
+    }
+
     private void HandleSurfaceOnCollisionEnter(Collision collision)
     {
         var surface = collision.gameObject.GetComponent<ISurface>();
@@ -97,6 +108,10 @@ public class CharacterMovement : MonoBehaviour
 
             case SurfaceType.Sliding:
                 _isSliding = true;
+                break;
+            
+            case SurfaceType.Oil:
+                _isOnOil = true;
                 break;
             
             default:
@@ -117,6 +132,10 @@ public class CharacterMovement : MonoBehaviour
 
             case SurfaceType.Sliding:
                 _isSliding = false;
+                break;
+            
+            case SurfaceType.Oil:
+                _isOnOil = false;
                 break;
             
             default:
