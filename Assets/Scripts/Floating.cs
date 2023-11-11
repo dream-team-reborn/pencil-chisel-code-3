@@ -2,7 +2,10 @@ using UnityEngine;
 
 public class Floating : MonoBehaviour
 {
-    public float velocityDump = 0.9f;
+    public float velocityDrag = 0.01f;
+    public float angularDrag = 0.008f;
+    public float floatHeightPercentage = 0.1f;
+
 
     [SerializeField] private Transform waterObject;
 
@@ -19,6 +22,7 @@ public class Floating : MonoBehaviour
 
             ApplyFloatingForce(rb, submergedVolume);
             dampVelocity(rb);
+            dampRotation(rb);
         }
         
     }
@@ -37,7 +41,7 @@ public class Floating : MonoBehaviour
         }
         else
         { 
-            float submergedHeight = waterLevel - bounds.min.y;
+            float submergedHeight = waterLevel - (bounds.min.y + (bounds.max.y - bounds.min.y) * floatHeightPercentage);
             submergedVolume = submergedHeight * GetComponent<Collider>().bounds.size.x * GetComponent<Collider>().bounds.size.z;
         }
 
@@ -46,7 +50,12 @@ public class Floating : MonoBehaviour
 
     private void dampVelocity(Rigidbody rb)
     {
-        rb.velocity *= (1f - velocityDump);
+        rb.velocity *= (1f - velocityDrag);
+    }
+
+    private void dampRotation(Rigidbody rb)
+    {
+        rb.angularVelocity *= (1f - angularDrag);
     }
 
     private void ApplyFloatingForce(Rigidbody rb, float submergedVolume)
