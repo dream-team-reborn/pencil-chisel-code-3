@@ -1,20 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using CharacterMovements;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class CharacterMovement : MonoBehaviour
 {
-
     [SerializeField] private float moveSpeed;
 
     [SerializeField] private float jumpSpeed;
 
     [SerializeField] private float slidingGravityIncrease;
-    
-    [SerializeField] private GameObject flooringSurface;
-
-    [SerializeField] private GameObject slidingSurface;
 
     private Rigidbody _rigidbody;
     private bool _isGrounded, _isSliding;
@@ -32,31 +29,15 @@ public class CharacterMovement : MonoBehaviour
         HandlePlaneMovement();
         HandleJumpMovement();
     }
-    
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name == flooringSurface.name)
-        {
-            _isGrounded = true;
-        }
-        
-        if (collision.gameObject.name == slidingSurface.name)
-        {
-            _isSliding = true;
-        }
+        HandleSurfaceOnCollisionEnter(collision);
     }
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.name == flooringSurface.name)
-        {
-            _isGrounded = false;
-        }
-        
-        if (collision.gameObject.name == slidingSurface.name)
-        {
-            _isSliding = false;
-        }
+        HandleSurfaceOnCollisionExit(collision);
     }
 
     private void HandlePlaneMovement()
@@ -75,7 +56,7 @@ public class CharacterMovement : MonoBehaviour
     private void HandleGravityChanges()
     {
         var gravity = Physics.gravity;
-        if ((!_isSliding || _isGrounded) && gravity.y < -9.8f)
+        if (!_isSliding && gravity.y < -9.8f)
         {
             Physics.gravity = new Vector3(0, -9.8f, 0);
             return;
@@ -88,8 +69,58 @@ public class CharacterMovement : MonoBehaviour
     {
         var jumpInput = Input.GetButtonDown("Jump");
 
-        if (!jumpInput || !_isGrounded) return;
+        if (!jumpInput) return;
+
         var movement = new Vector3(0, jumpSpeed, 0);
-        _rigidbody.AddForce(movement);
+
+        if (_isSliding)
+        {
+            _rigidbody.AddForce(movement);
+        }
+
+        if (_isGrounded)
+        {
+            _rigidbody.AddForce(movement);
+        }
+    }
+
+    private void HandleSurfaceOnCollisionEnter(Collision collision)
+    {
+        var surface = collision.gameObject.GetComponent<ISurface>();
+        if (surface == null) return;
+
+        switch (surface.GetSurfaceType())
+        {
+            case SurfaceType.Ground:
+                _isGrounded = true;
+                break;
+
+            case SurfaceType.Sliding:
+                _isSliding = true;
+                break;
+            
+            default:
+                return;
+        }
+    }
+
+    private void HandleSurfaceOnCollisionExit(Collision collision)
+    {
+        var surface = collision.gameObject.GetComponent<ISurface>();
+        if (surface == null) return;
+
+        switch (surface.GetSurfaceType())
+        {
+            case SurfaceType.Ground:
+                _isGrounded = false;
+                break;
+
+            case SurfaceType.Sliding:
+                _isSliding = false;
+                break;
+            
+            default:
+                return;
+        }
     }
 }
