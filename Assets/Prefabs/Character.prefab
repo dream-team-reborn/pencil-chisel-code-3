@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5.33
   jumpSpeed: 300
-  damageJumpForce: 400
+  damageJumpForce: 10
   slidingGravityIncrease: 1.05
 --- !u!136 &3614843076357583372
 CapsuleCollider:
