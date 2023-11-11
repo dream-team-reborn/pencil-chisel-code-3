@@ -6,73 +6,80 @@ public class SpawnObjectOnSpace : MonoBehaviour
 {
     public GameObject[] platformsToSpawn;
     public GameObject[] obstaclesToSpawn;
-    public float platformOverObstaclesPercentage = 0.1f;
-    public float platformSpawnWaitMin = 3f;
-    public float platformSpawnWaitMax = 5f;
-    public float obstaclesSpawnWaitMin = 0.1f;
-    public float obstaclesSpawnWaitMax = 0.5f;
+    public float spawnWaitMin = 3f;
+    public float spawnWaitMax = 5f;
+    public float spawnRatio = 0.25f;
+    
     // Reference to the cube transform
-    public Transform spawnAreaTransform;
-    private Bounds spawnArea;
-    private float lastSpawnTime = -1; 
-    private float nextSpawnIn = 0f;
-
-    public enum FoodType { PLATFORM, OBSTACLE }
-
-    private Dictionary<FoodType, GameObject[]> foodMap;
-
+    private Bounds _spawnArea;
+    private float _nextSpawnIn, _lastSpawnTime = -1;
+    private bool _isSpawnActive;
+    private List<GameObject> _spawned;
+    
     [SerializeField] private Transform waterObject;
 
     void Start()
     {
-        foodMap =   new Dictionary<FoodType, GameObject[]> 
-            { { FoodType.PLATFORM, platformsToSpawn }, { FoodType.OBSTACLE, obstaclesToSpawn } };
-        spawnArea = GetTransformBounds(transform.Find("SpawnArea"));
+        _isSpawnActive = true;
+        _spawned = new List<GameObject>();
+        _spawnArea = GetTransformBounds(transform.Find("SpawnArea"));
     }
 
     void Update()
     {
-        float currentTime = Time.time;
-        if ((currentTime - lastSpawnTime) > nextSpawnIn)
-        {
-            lastSpawnTime = currentTime;
-            switch (SpawnPrefab()) 
-            {
-                case FoodType.PLATFORM: nextSpawnIn = Random.Range(platformSpawnWaitMin, platformSpawnWaitMax); break;
-                case FoodType.OBSTACLE: nextSpawnIn = Random.Range(obstaclesSpawnWaitMin, obstaclesSpawnWaitMax); break;
-            }
-        }
+        if (!_isSpawnActive) return;
+        
+        var currentTime = Time.time;
+        if (!(currentTime - _lastSpawnTime > _nextSpawnIn)) return;
+        
+        _lastSpawnTime = currentTime;
+        _nextSpawnIn = Random.Range(spawnWaitMin, spawnWaitMax);
+
+        SpawnPrefab();
     }
 
-    FoodType SpawnPrefab()
+    public void StartSpawning()
     {
-        FoodType foodTypeSelected = SelectFoodType();
-
-        GameObject[] platformsSelection = foodMap[foodTypeSelected];
-        if (platformsSelection != null)
-        {
-            int randomIndex = Random.Range(0, platformsSelection.Length - 1);
-
-            // Generate a random position within the cube bounds
-            Vector3 randomPosition = GetRandomPositionInBounds(spawnArea);
-            Debug.Log(randomPosition);
-            Object objectSpawned = Instantiate(platformsSelection[randomIndex], randomPosition, Quaternion.identity);
-            objectSpawned.GetComponent<Floating>().waterObject = waterObject;
-        }
-
-        return foodTypeSelected;
+        _isSpawnActive = true;
     }
 
-    FoodType SelectFoodType()
+    public void StopSpawning()
     {
-        double randomValue = UnityEngine.Random.value;
-        return randomValue <= platformOverObstaclesPercentage ? FoodType.PLATFORM : FoodType.OBSTACLE;
+        _isSpawnActive = false;
+    }
+
+    private void SpawnPrefab()
+    {
+        var subgroup = SelectSubgroup();
+        var randomIndex = Random.Range(0, subgroup.Length);
+
+        // Generate a random position within the cube bounds
+        var randomPosition = GetRandomPositionInBounds(_spawnArea);
+        var objectSpawned = Instantiate(subgroup[randomIndex], randomPosition, Quaternion.identity);
+        _spawned.Add(objectSpawned);
+        // We should avoid to GetComponent in the update function it is very expensive
+        objectSpawned.GetComponent<Floating>().waterObject = waterObject;
     }
     
-    Bounds GetTransformBounds(Transform objTransform)
+    private GameObject[] SelectSubgroup()
+    {
+        double randomValue = Random.value;
+        return randomValue <= spawnRatio ? platformsToSpawn : obstaclesToSpawn;
+    }
+
+    private void CleanSpawnedObjects()
+    {
+        if (_spawned == null) return;
+        foreach (var obj in _spawned)
+        {
+            Destroy(obj);
+        }
+    }
+    
+    private static Bounds GetTransformBounds(Component component)
     {
         // Get the bounds of the object (in local space)
-        Renderer renderer = objTransform.GetComponent<Renderer>();
+        var renderer = component.GetComponent<Renderer>();
         if (renderer != null)
         {
             return renderer.bounds;
@@ -84,14 +91,13 @@ public class SpawnObjectOnSpace : MonoBehaviour
         }
     }
 
-    Vector3 GetRandomPositionInBounds(Bounds bounds)
+    private static Vector3 GetRandomPositionInBounds(Bounds bounds)
     {
         // Calculate a random position within the bounds
-        float randomX = Random.Range(bounds.min.x, bounds.max.x);
-        float randomY = Random.Range(bounds.min.y, bounds.max.y);
-        float randomZ = Random.Range(bounds.min.z, bounds.max.z);
+        var randomX = Random.Range(bounds.min.x, bounds.max.x);
+        var randomY = Random.Range(bounds.min.y, bounds.max.y);
+        var randomZ = Random.Range(bounds.min.z, bounds.max.z);
 
         return new Vector3(randomX, randomY, randomZ);
     }
-
 }
