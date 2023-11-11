@@ -1325,7 +1325,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: obstaclesToSpawn.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: platformsToSpawn.Array.size
@@ -1334,11 +1334,11 @@ PrefabInstance:
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: obstaclesToSpawn.Array.data[0]
       value: 
-      objectReference: {fileID: 8060954877649951707, guid: 1f91baa26807da547bf6b964123325b3, type: 3}
+      objectReference: {fileID: 4511477562484643712, guid: d9f67c5d6e70c2c4296c8899a46f5480, type: 3}
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: obstaclesToSpawn.Array.data[1]
       value: 
-      objectReference: {fileID: 3645672013065318607, guid: b81d69354bc6e764dbc0ae4148552f14, type: 3}
+      objectReference: {fileID: 4577841404136102305, guid: fc5a7bde99153a2439092661fcb3d106, type: 3}
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: obstaclesToSpawn.Array.data[2]
       value: 
@@ -1346,7 +1346,7 @@ PrefabInstance:
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: platformsToSpawn.Array.data[0]
       value: 
-      objectReference: {fileID: 7660729292462319308, guid: 18a0434958ac9514582278a81e7d596f, type: 3}
+      objectReference: {fileID: 332249102361570480, guid: b789ed6c372a3fc4a838bf7b36b7a1a5, type: 3}
     - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
       propertyPath: platformOverObstaclesPercentage
       value: 0.3

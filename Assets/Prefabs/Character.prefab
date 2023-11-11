@@ -63,9 +63,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 5.33
-  jumpSpeed: 300
+  jumpSpeed: 425
   damageJumpForce: 10
-  slidingGravityIncrease: 1.05
 --- !u!114 &6981400955796738840
 MonoBehaviour:
   m_ObjectHideFlags: 0
