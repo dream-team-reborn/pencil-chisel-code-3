@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +23,7 @@ public class GameManager : MonoBehaviour
             {
                 instance = FindObjectOfType<GameManager>();
             }
+
             return instance;
         }
     }
@@ -36,16 +40,24 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        var cameraTransform = mainCamera.transform;
+        _cameraInitRotation = cameraTransform.rotation;
+        _cameraInitPosition = cameraTransform.position;
+        _cameraYZRatio = Math.Abs(_cameraInitPosition.y / _cameraInitPosition.z);
     }
+    
+    [SerializeField] private int playerNumber = 0;
+    [SerializeField] private GameObject characterPrefab;
+    [SerializeField] private Vector3[] spawnPositions;
+    [SerializeField] private Camera mainCamera;
+    [SerializeField] private float cameraMovement;
+    [SerializeField] private float triggerAtMagnitude;
 
-    [SerializeField]
-    private int playerNumber = 0;
-    [SerializeField]
-    private GameObject characterPrefab;
-    [SerializeField]
-    private Vector3[] spawnPositions;
-    [SerializeField] private List<AudioClip> _dieSounds;
-
+    private Quaternion _cameraInitRotation;
+    private Vector3 _cameraInitPosition;
+    private float _cameraYZRatio;
+    private bool _cameraMoved = false;
     private bool isGameInProgress = false;
     private float gameTimer = 0;
     private List<Character> playerCharacters = new List<Character>();
@@ -86,6 +98,36 @@ public class GameManager : MonoBehaviour
         {
             gameTimer += Time.deltaTime;
             UIManager.Instance.OnGameUpdate(gameTimer);
+
+            if (playerCharacters.Count == 1)
+            {
+                mainCamera.transform.LookAt(playerCharacters[0].transform);
+            }
+            else
+            {
+                var origin = new Vector3();
+                var movement = new Vector3(0, cameraMovement * _cameraYZRatio, -cameraMovement);
+                var maxMagnitude =
+                    playerCharacters
+                        .Select(player => player.transform.position - origin)
+                        .Select(distance => distance.magnitude)
+                        .Prepend(0f)
+                        .Max();
+                if (maxMagnitude > triggerAtMagnitude && !_cameraMoved)
+                {
+                    _cameraMoved = true;
+                    mainCamera.transform.position += movement;
+                }
+                else if (maxMagnitude <= triggerAtMagnitude)
+                {
+                    mainCamera.transform.position = _cameraInitPosition;
+                    _cameraMoved = false;
+                }
+            }
+        }
+        else
+        {
+            mainCamera.transform.rotation = _cameraInitRotation;
         }
     }
 
@@ -133,7 +175,8 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < playerNumber; i++)
         {
-            Character newPlayer = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity).GetComponent<Character>();
+            Character newPlayer = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity)
+                .GetComponent<Character>();
             newPlayer.Initialize(i);
             playerCharacters.Add(newPlayer);
         }
@@ -161,6 +204,7 @@ public class GameManager : MonoBehaviour
         {
             winner = playerCharacters[0].PlayerID;
         }
+
         Debug.Log(winner);
         UIManager.Instance.EndMatch(winner);
 

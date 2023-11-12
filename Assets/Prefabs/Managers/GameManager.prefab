@@ -52,6 +52,9 @@ MonoBehaviour:
   - {x: -2, y: 2, z: -2}
   - {x: 2, y: 2, z: -2}
   - {x: -2, y: 2, z: 2}
+  camera: {fileID: 0}
+  cameraMovement: 8
+  triggerAtMagnitude: 9
 --- !u!1 &3615355885145594377
 GameObject:
   m_ObjectHideFlags: 0
