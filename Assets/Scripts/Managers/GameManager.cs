@@ -49,6 +49,7 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private int playerNumber = 0;
     [SerializeField] private GameObject characterPrefab;
+    [SerializeField] private Color[] characterColors;
     [SerializeField] private Vector3[] spawnPositions;
     [SerializeField] private Camera mainCamera;
     [SerializeField] private float cameraMovement;
@@ -177,7 +178,7 @@ public class GameManager : MonoBehaviour
         {
             Character newPlayer = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity)
                 .GetComponent<Character>();
-            newPlayer.Initialize(i);
+            newPlayer.Initialize(i, characterColors[i]);
             playerCharacters.Add(newPlayer);
         }
 
