@@ -6,11 +6,24 @@ public class Floating : MonoBehaviour
     public float angularDrag = 0.008f;
     public float floatHeightPercentage = 0.1f;
     public float maxSubmergedVolume = 5.0f;
-    public float maxFloatingTime = 5000f;
+    public float maxFloatingTime = 10f;
 
     public Transform waterObject;
 
     private float currentFloatingTime = 0.0f;
+    private Material mat;
+    private Vector3 startingScale;
+
+    [SerializeField] 
+    float burnStateMultiplier = 0.5f;
+    [SerializeField]
+    float scaleMultiplier = 0.25f;
+
+    private void Start()
+    {
+        mat = GetComponent<MeshRenderer>().material;
+        startingScale = transform.localScale;
+    }
 
     private void Update()
     {
@@ -18,11 +31,12 @@ public class Floating : MonoBehaviour
         Bounds bounds = GetComponent<Collider>().bounds;
 
         float submergedVolume = CalculateSubmergedVolume(waterLevel);
-        Debug.Log(submergedVolume);
 
-        bool isFloatingTimeExpired = IsFloatingTimeExpired();
+        currentFloatingTime += Time.deltaTime;
+        SetBurnState();
+        SetScale();
 
-        if (submergedVolume > 0 && !isFloatingTimeExpired)
+        if (submergedVolume > 0/* && !isFloatingTimeExpired*/)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
 
@@ -30,10 +44,6 @@ public class Floating : MonoBehaviour
             dampVelocity(rb);
             dampRotation(rb);
         }       
-        else if(submergedVolume > maxSubmergedVolume && isFloatingTimeExpired)
-        {
-            Destroy(gameObject);
-        }
     }
 
     private float CalculateSubmergedVolume(float waterLevel)
@@ -75,15 +85,23 @@ public class Floating : MonoBehaviour
         rb.AddForce(Vector3.up * buoyancyForce, ForceMode.Force);    
     }
 
-    private bool IsFloatingTimeExpired()
+    private void SetBurnState()
     {
-        currentFloatingTime += Time.deltaTime;
+        float burnState = Mathf.Min(currentFloatingTime * burnStateMultiplier / maxFloatingTime, 1.0f);
+        mat.SetFloat("_Burn_State", burnState);
+    }
 
-        if (currentFloatingTime < maxFloatingTime)
+    private void SetScale()
+    {
+        float scaleState = 1 - Mathf.Min(currentFloatingTime * scaleMultiplier / maxFloatingTime, 1.0f);
+
+        if(scaleState <= 0)
         {
-            return true;
+            Destroy (gameObject);
         }
-
-        return false;
+        else
+        {
+            transform.localScale = startingScale * scaleState;
+        }
     }
 }
