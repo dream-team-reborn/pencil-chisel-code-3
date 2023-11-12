@@ -43,16 +43,24 @@ public class GameManager : MonoBehaviour
     private GameObject characterPrefab;
     [SerializeField]
     private Vector3[] spawnPositions;
-    
+
+    private bool isGameInProgress = false;
     private List<Character> playerCharacters = new List<Character>();
     private MoveUp oil;
+    private SpawnObjectOnSpace spawner;
+
+    private void Start()
+    {
+        spawner = FindObjectOfType<SpawnObjectOnSpace>();
+    }
 
     void OnEnable()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        // SceneManager.sceneLoaded += OnSceneLoaded;
         UIManager.OnClicked += OnButtonClicked;
     }
 
+    /*
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         Debug.Log("OnSceneLoaded: " + scene.name);
@@ -63,13 +71,19 @@ public class GameManager : MonoBehaviour
             StartMatch();
         }
     }
+    */
 
     void OnButtonClicked(string buttonName)
     {
         switch (buttonName)
         {
             case "Play":
-                SceneManager.LoadScene("Level");
+                // SceneManager.LoadScene("Level");
+                StartMatch();
+                break;
+
+            case "Continue":
+                ResetMatch();
                 break;
 
             case "1 Player":
@@ -110,30 +124,63 @@ public class GameManager : MonoBehaviour
 
         oil = FindObjectOfType<MoveUp>();
         oil.StartMovement();
+
+        spawner.StartSpawning();
+
+        UIManager.Instance.StartMatch();
+
+        isGameInProgress = true;
     }
 
     void EndMatch()
     {
-        playerNumber = 0;
         oil.StopMovement();
-        SceneManager.LoadScene("Menu");
+        spawner.StopSpawning();
+
+        int winner = 0;
+        if (playerCharacters.Count > 0)
+        {
+            winner = playerCharacters[0].PlayerID;
+        }
+        Debug.Log(winner);
+        UIManager.Instance.EndMatch(winner);
+        // SceneManager.LoadScene("Menu");
+
+        isGameInProgress = false;
+    }
+
+    void ResetMatch()
+    {
+        playerNumber = 0;
+        oil.ResetPosition();
+        spawner.ClearSpawning();
+
+        foreach (Character character in playerCharacters)
+        {
+            Destroy(character.gameObject);
+        }
+
+        UIManager.Instance.Reset();
     }
 
     public void OnCharacterDied(int playerID)
     {
-        for (int i = playerCharacters.Count - 1; i >= 0; i--)
+        if (isGameInProgress)
         {
-            if (playerCharacters[i].PlayerID != playerID)
-                continue;
+            for (int i = playerCharacters.Count - 1; i >= 0; i--)
+            {
+                if (playerCharacters[i].PlayerID != playerID)
+                    continue;
 
-            GameObject playerGO = playerCharacters[i].gameObject;
-            playerCharacters.RemoveAt(i);
-            Destroy(playerGO);
-        }
+                GameObject playerGO = playerCharacters[i].gameObject;
+                playerCharacters.RemoveAt(i);
+                Destroy(playerGO);
+            }
 
-        if (playerCharacters.Count == 0)
-        {
-            EndMatch();
+            if (playerCharacters.Count <= 1)
+            {
+                EndMatch();
+            }
         }
     }
 }

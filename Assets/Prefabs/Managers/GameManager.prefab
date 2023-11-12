@@ -47,7 +47,7 @@ MonoBehaviour:
   playerNumber: 0
   characterPrefab: {fileID: 3265838758246562719, guid: 3f36ce9af6a624c0b829f478bb8ad079, type: 3}
   spawnPositions:
-  - {x: 1, y: 2, z: 1}
-  - {x: -1, y: 2, z: -1}
-  - {x: 1, y: 2, z: -1}
-  - {x: -1, y: 2, z: 1}
+  - {x: 2, y: 2, z: 2}
+  - {x: -2, y: 2, z: -2}
+  - {x: 2, y: 2, z: -2}
+  - {x: -2, y: 2, z: 2}

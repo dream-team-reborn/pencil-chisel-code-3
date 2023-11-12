@@ -45,14 +45,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b40f67ff798936842b590bdedf5bc698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  platformsToSpawn: []
-  obstaclesToSpawn: []
-  platformOverObstaclesPercentage: 0.1
-  platformSpawnWaitMin: 3
-  platformSpawnWaitMax: 5
-  obstaclesSpawnWaitMin: 0.1
-  obstaclesSpawnWaitMax: 0.5
-  spawnAreaTransform: {fileID: 0}
+  platformsToSpawn:
+  - {fileID: 332249102361570480, guid: b789ed6c372a3fc4a838bf7b36b7a1a5, type: 3}
+  obstaclesToSpawn:
+  - {fileID: 4511477562484643712, guid: d9f67c5d6e70c2c4296c8899a46f5480, type: 3}
+  - {fileID: 4577841404136102305, guid: fc5a7bde99153a2439092661fcb3d106, type: 3}
+  spawnWaitMin: 3
+  spawnWaitMax: 5
+  spawnRatio: 0.25
+  waterObject: {fileID: 0}
 --- !u!1 &6983818741509656424
 GameObject:
   m_ObjectHideFlags: 0
@@ -80,8 +81,8 @@ Transform:
   m_GameObject: {fileID: 6983818741509656424}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.29, z: 7.5}
-  m_LocalScale: {x: 9, y: 4.2, z: 9}
+  m_LocalPosition: {x: 0, y: 12, z: 0}
+  m_LocalScale: {x: 12, y: 4.2, z: 12}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1139599888989733762}
