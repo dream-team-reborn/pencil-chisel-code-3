@@ -5,9 +5,12 @@ public class Floating : MonoBehaviour
     public float velocityDrag = 0.01f;
     public float angularDrag = 0.008f;
     public float floatHeightPercentage = 0.1f;
-
+    public float maxSubmergedVolume = 5.0f;
+    public float maxFloatingTime = 5000f;
 
     public Transform waterObject;
+
+    private float currentFloatingTime = 0.0f;
 
     private void Update()
     {
@@ -15,16 +18,22 @@ public class Floating : MonoBehaviour
         Bounds bounds = GetComponent<Collider>().bounds;
 
         float submergedVolume = CalculateSubmergedVolume(waterLevel);
+        Debug.Log(submergedVolume);
 
-        if (submergedVolume > 0)
+        bool isFloatingTimeExpired = IsFloatingTimeExpired();
+
+        if (submergedVolume > 0 && !isFloatingTimeExpired)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
 
             ApplyFloatingForce(rb, submergedVolume);
             dampVelocity(rb);
             dampRotation(rb);
+        }       
+        else if(submergedVolume > maxSubmergedVolume && isFloatingTimeExpired)
+        {
+            Destroy(gameObject);
         }
-        
     }
 
     private float CalculateSubmergedVolume(float waterLevel)
@@ -64,5 +73,17 @@ public class Floating : MonoBehaviour
         float buoyancyForce = submergedVolume * gravityValue;
 
         rb.AddForce(Vector3.up * buoyancyForce, ForceMode.Force);    
+    }
+
+    private bool IsFloatingTimeExpired()
+    {
+        currentFloatingTime += Time.deltaTime;
+
+        if (currentFloatingTime < maxFloatingTime)
+        {
+            return true;
+        }
+
+        return false;
     }
 }
