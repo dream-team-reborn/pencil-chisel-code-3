@@ -36,6 +36,8 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        _audioSource = GetComponentInChildren<AudioSource>();
     }
 
     [SerializeField]
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
     private List<Character> playerCharacters = new List<Character>();
     private MoveUp oil;
     private SpawnObjectOnSpace spawner;
+    private AudioSource _audioSource;
 
     private void Start()
     {
@@ -127,6 +130,8 @@ public class GameManager : MonoBehaviour
         oil.StartMovement();
 
         spawner.StartSpawning();
+        
+        _audioSource.Play();
 
         UIManager.Instance.StartMatch();
 
@@ -146,6 +151,8 @@ public class GameManager : MonoBehaviour
         Debug.Log(winner);
         UIManager.Instance.EndMatch(winner);
         // SceneManager.LoadScene("Menu");
+        
+        _audioSource.Stop();
 
         isGameInProgress = false;
     }
