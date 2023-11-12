@@ -7,11 +7,11 @@ using UnityEngine;
 public class IngredientAudio : MonoBehaviour
 {
     private bool _splashSoundPlayed = false;
-    private AudioSource _audioSource;
+    private AudioSource[] _audioSources;
 
     private void Awake()
     {
-        _audioSource = GetComponentInChildren<AudioSource>();
+        _audioSources = GetComponentsInChildren<AudioSource>();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -37,9 +37,10 @@ public class IngredientAudio : MonoBehaviour
 
     private void PlaySound()
     {
-        if (_audioSource == null || _splashSoundPlayed) return;
+        if (_audioSources == null || _splashSoundPlayed) return;
         
-        _audioSource.Play();
+        foreach (AudioSource audioSource in _audioSources)
+            audioSource.Play();
         _splashSoundPlayed = true;
     }
 }

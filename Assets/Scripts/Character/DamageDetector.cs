@@ -1,11 +1,13 @@
 using System.Collections;
 using CharacterMovements;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class DamageDetector : MonoBehaviour
 {
     [SerializeField] private byte _maxDamageAmount;
     [SerializeField] private float _damageImmunitySeconds;
+    [SerializeField] private List<AudioClip> audioClips;
     
     private Character _character;
     private byte _damageCounter;
@@ -36,7 +38,10 @@ public class DamageDetector : MonoBehaviour
             return;
         
         _damageCounter++;
-
+        AudioSource randomDamageSound = gameObject.AddComponent<AudioSource>();
+        randomDamageSound.clip = audioClips[Random.Range(0, audioClips.Count)];
+        randomDamageSound.Play();
+        
         if (_damageCounter >= _maxDamageAmount)
         {
             _character.Die();

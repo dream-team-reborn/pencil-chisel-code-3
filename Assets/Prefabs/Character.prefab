@@ -79,6 +79,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _maxDamageAmount: 3
   _damageImmunitySeconds: 5
+  audioClips:
+  - {fileID: 8300000, guid: bfdeef467626a024ebbbfa41962e4330, type: 3}
+  - {fileID: 8300000, guid: 6a6186a663832974cbcafb5b067657f3, type: 3}
+  - {fileID: 8300000, guid: 88f6099fe497c3845a94b0ba0bd58c8d, type: 3}
 --- !u!136 &3614843076357583372
 CapsuleCollider:
   m_ObjectHideFlags: 0
