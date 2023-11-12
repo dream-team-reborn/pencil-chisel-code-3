@@ -205,7 +205,6 @@ public class GameManager : MonoBehaviour
             winner = playerCharacters[0].PlayerID;
         }
 
-        Debug.Log(winner);
         UIManager.Instance.EndMatch(winner);
 
         isGameInProgress = false;
