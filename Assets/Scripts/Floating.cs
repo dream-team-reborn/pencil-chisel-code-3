@@ -36,7 +36,7 @@ public class Floating : MonoBehaviour
         SetBurnState();
         SetScale();
 
-        if (submergedVolume > 0/* && !isFloatingTimeExpired*/)
+        if (submergedVolume > 0 && currentFloatingTime < maxFloatingTime)
         {
             Rigidbody rb = GetComponent<Rigidbody>();
 
