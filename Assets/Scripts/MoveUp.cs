@@ -23,6 +23,7 @@ public class MoveUp : MonoBehaviour
     private void Awake()
     {
         oilMaryMaterial = GetComponent<MeshRenderer>().materials[0];
+        oilMaryMaterial.SetFloat(_radiusShaderKey, 0.09f);
     }
 
     void Start()
