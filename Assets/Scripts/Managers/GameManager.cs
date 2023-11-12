@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 public class GameManager : MonoBehaviour
 {
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour
         oil.StopMovement();
         spawner.StopSpawning();
 
-        int winner = 0;
+        int winner = -1;
         if (playerCharacters.Count > 0)
         {
             winner = playerCharacters[0].PlayerID;
@@ -155,9 +156,11 @@ public class GameManager : MonoBehaviour
         oil.ResetPosition();
         spawner.ClearSpawning();
 
-        foreach (Character character in playerCharacters)
+        for (int i = playerCharacters.Count - 1; i >= 0; i--)
         {
-            Destroy(character.gameObject);
+            GameObject playerGO = playerCharacters[i].gameObject;
+            playerCharacters.RemoveAt(i);
+            Destroy(playerGO);
         }
 
         UIManager.Instance.Reset();

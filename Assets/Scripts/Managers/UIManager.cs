@@ -84,9 +84,9 @@ public class UIManager : MonoBehaviour
     {
         startMenu.SetActive(false);
         
-        if(winner > 0)
+        if(winner >= 0)
         {
-            winnerLabel.text = "Congratulations\nPlayer " + winner + " won!";
+            winnerLabel.text = "Congratulations\nPlayer " + (winner + 1) + " won!";
         }
         else
         {
@@ -98,6 +98,7 @@ public class UIManager : MonoBehaviour
 
     public void Reset()
     {
+        playerLabel.text = "Players: 1";
         startMenu.SetActive(true);
         endMenu.SetActive(false);
     }
