@@ -36,8 +36,6 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        _audioSources = GetComponentsInChildren<AudioSource>();
     }
 
     [SerializeField]
@@ -53,11 +51,14 @@ public class GameManager : MonoBehaviour
     private List<Character> playerCharacters = new List<Character>();
     private MoveUp oil;
     private SpawnObjectOnSpace spawner;
-    private AudioSource[] _audioSources;
+    private AudioSource[] _soundAudioSources;
+    private AudioSource[] _musicAudioSources;
 
     private void Start()
     {
         spawner = FindObjectOfType<SpawnObjectOnSpace>();
+        _soundAudioSources = transform.Find("Sound").GetComponents<AudioSource>();
+        _musicAudioSources = transform.Find("Music").GetComponents<AudioSource>();
     }
 
     void OnEnable()
@@ -142,8 +143,8 @@ public class GameManager : MonoBehaviour
 
         spawner.StartSpawning();
         
-        foreach (AudioSource audioSource in _audioSources)
-            audioSource.Play();
+        foreach (AudioSource music in _musicAudioSources)
+            music.Play();
 
         gameTimer = 0;
         isGameInProgress = true;
@@ -179,18 +180,16 @@ public class GameManager : MonoBehaviour
             Destroy(playerGO);
         }
 
-        foreach (AudioSource audioSource in _audioSources)
-            audioSource.Stop();
+        foreach (AudioSource music in _musicAudioSources)
+            music.Stop();
         
         UIManager.Instance.Reset();
     }
 
     public void OnCharacterDied(int playerID)
     {
-        AudioSource randomDieSound = gameObject.AddComponent<AudioSource>();
-        randomDieSound.clip = _dieSounds[Random.Range(0, _dieSounds.Count)];
-        randomDieSound.Play();
-
+        _soundAudioSources[Random.Range(0, _soundAudioSources.Length)].Play();
+        
         if (isGameInProgress)
         {
             for (int i = playerCharacters.Count - 1; i >= 0; i--)

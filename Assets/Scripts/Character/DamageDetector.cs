@@ -7,15 +7,16 @@ public class DamageDetector : MonoBehaviour
 {
     [SerializeField] private byte _maxDamageAmount;
     [SerializeField] private float _damageImmunitySeconds;
-    [SerializeField] private List<AudioClip> audioClips;
     
     private Character _character;
     private byte _damageCounter;
     private bool _canBeDamaged;
+    private AudioSource[] _damageSounds;
 
     private void Start()
     {
         _character = GetComponent<Character>();
+        _damageSounds = GetComponentsInChildren<AudioSource>();
 
         _canBeDamaged = true;
     }
@@ -38,9 +39,7 @@ public class DamageDetector : MonoBehaviour
             return;
         
         _damageCounter++;
-        AudioSource randomDamageSound = gameObject.AddComponent<AudioSource>();
-        randomDamageSound.clip = audioClips[Random.Range(0, audioClips.Count)];
-        randomDamageSound.Play();
+        _damageSounds[Random.Range(0, _damageSounds.Length)].Play();
         
         if (_damageCounter >= _maxDamageAmount)
         {
