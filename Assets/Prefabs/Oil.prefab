@@ -4943,6 +4943,48 @@ MonoBehaviour:
   maxY: -0.22
   oilMaryMaterial: {fileID: 0}
   _radiusStep: 0.01
+  _animationCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.66778564
+      inSlope: -0.07450976
+      outSlope: -0.07450976
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.4987559
+      value: 0.63062346
+      inSlope: -0.1523198
+      outSlope: -0.1523198
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.5398036
+    - serializedVersion: 3
+      time: 0.6667609
+      value: 0.3676495
+      inSlope: -1.1611947
+      outSlope: -1.1611947
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.11658209
+    - serializedVersion: 3
+      time: 0.9956665
+      value: 0.19895554
+      inSlope: 0.107481666
+      outSlope: 0.107481666
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.12880206
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &6165737419289249764
 MonoBehaviour:
   m_ObjectHideFlags: 0

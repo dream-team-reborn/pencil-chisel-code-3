@@ -20,6 +20,8 @@ public class MoveUp : MonoBehaviour
     [SerializeField]
     float _radiusStep = 0.01f;
 
+    [SerializeField] private AnimationCurve _animationCurve;
+
     private void Awake()
     {
         oilMaryMaterial = GetComponent<MeshRenderer>().materials[0];
@@ -33,18 +35,14 @@ public class MoveUp : MonoBehaviour
 
     void Update()
     {
-        if (isMoving)
-        {
-            float newY = transform.position.y + speed * Time.deltaTime;
-
-            if (newY < maxY)
-            {
-                transform.position = new Vector3(transform.position.x, newY, transform.position.z);
-                var oldShaderRadius = oilMaryMaterial.GetFloat(_radiusShaderKey);
-                oilMaryMaterial.SetFloat(_radiusShaderKey, oldShaderRadius + _radiusStep * Time.deltaTime);
-                    
-            }
-        }
+        if (!isMoving) return;
+        var newY = transform.position.y + speed * Time.deltaTime;
+    
+        if (newY > maxY) return;
+        transform.position = new Vector3(transform.position.x, newY, transform.position.z);
+        var multiplier = _animationCurve.Evaluate(Normalize(newY, startingY, maxY));
+        var oldShaderRadius = oilMaryMaterial.GetFloat(_radiusShaderKey);
+        oilMaryMaterial.SetFloat(_radiusShaderKey, oldShaderRadius + _radiusStep * multiplier * Time.deltaTime);
     }
 
     public void StartMovement()
@@ -60,5 +58,10 @@ public class MoveUp : MonoBehaviour
     public void ResetPosition()
     {
         transform.position = new Vector3(transform.position.x, startingY, transform.position.z);
+    }
+
+    private static float Normalize(float value, float min, float max)
+    {
+        return (value - min) / (max - min);
     }
 }
