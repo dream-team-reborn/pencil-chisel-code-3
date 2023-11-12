@@ -57,6 +57,7 @@ public class MoveUp : MonoBehaviour
 
     public void ResetPosition()
     {
+        oilMaryMaterial.SetFloat(_radiusShaderKey, 0.09f);
         transform.position = new Vector3(transform.position.x, startingY, transform.position.z);
     }
 
