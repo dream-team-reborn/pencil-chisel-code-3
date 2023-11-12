@@ -150,9 +150,6 @@ public class GameManager : MonoBehaviour
         }
         Debug.Log(winner);
         UIManager.Instance.EndMatch(winner);
-        // SceneManager.LoadScene("Menu");
-        
-        _audioSource.Stop();
 
         isGameInProgress = false;
     }
@@ -170,6 +167,7 @@ public class GameManager : MonoBehaviour
             Destroy(playerGO);
         }
 
+        _audioSource.Stop();
         UIManager.Instance.Reset();
     }
 
