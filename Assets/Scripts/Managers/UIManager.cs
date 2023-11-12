@@ -44,11 +44,15 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     GameObject startMenu;
     [SerializeField]
+    GameObject gameMenu;
+    [SerializeField]
     GameObject endMenu;
     [SerializeField]
     TMPro.TMP_Text playerLabel;
     [SerializeField]
     TMPro.TMP_Text winnerLabel;
+    [SerializeField]
+    TMPro.TMP_Text timerLabel;
 
     public void OnButtonPressed(string buttonName)
     {
@@ -74,11 +78,32 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public void OnGameUpdate(float timePassed)
+    {
+        UpdateTimer(((int)timePassed));
+    }
+
+    private void UpdateTimer(int timeToShow)
+    {
+        if (timeToShow >= 10)
+        {
+            timerLabel.text = timeToShow.ToString();
+        }
+        else
+        {
+            timerLabel.text = "0" + timeToShow.ToString();
+        }
+    }
+
     public void StartMatch()
     {
+        timerLabel.text = "00";
         startMenu.SetActive(false);
+        gameMenu.SetActive(true);
         endMenu.SetActive(false);
     }
+
+
 
     public void EndMatch(int winner)
     {
@@ -100,6 +125,7 @@ public class UIManager : MonoBehaviour
     {
         playerLabel.text = "Players: 1";
         startMenu.SetActive(true);
+        gameMenu.SetActive(false);
         endMenu.SetActive(false);
     }
 }

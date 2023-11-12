@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
     private Vector3[] spawnPositions;
 
     private bool isGameInProgress = false;
+    private float gameTimer = 0;
     private List<Character> playerCharacters = new List<Character>();
     private MoveUp oil;
     private SpawnObjectOnSpace spawner;
@@ -76,6 +77,15 @@ public class GameManager : MonoBehaviour
         }
     }
     */
+
+    private void Update()
+    {
+        if (isGameInProgress)
+        {
+            gameTimer += Time.deltaTime;
+            UIManager.Instance.OnGameUpdate(gameTimer);
+        }
+    }
 
     void OnButtonClicked(string buttonName)
     {
@@ -133,9 +143,9 @@ public class GameManager : MonoBehaviour
         
         _audioSource.Play();
 
-        UIManager.Instance.StartMatch();
-
+        gameTimer = 0;
         isGameInProgress = true;
+        UIManager.Instance.StartMatch();
     }
 
     void EndMatch()
