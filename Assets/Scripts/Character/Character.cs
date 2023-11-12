@@ -18,7 +18,6 @@ public class Character : MonoBehaviour
         
         foreach (var meshRenderer in _meshRenderers)
         {
-            Debug.Log(_playerColor.ToString());
             meshRenderer.material.SetColor(CharacterColor, _playerColor);
         }
     }
