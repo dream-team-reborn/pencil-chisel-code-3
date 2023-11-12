@@ -20,7 +20,7 @@ public class SpawnObjectOnSpace : MonoBehaviour
 
     void Start()
     {
-        _isSpawnActive = true;
+        _isSpawnActive = false;
         _spawned = new List<GameObject>();
         _spawnArea = GetTransformBounds(transform.Find("SpawnArea"));
     }
@@ -46,6 +46,11 @@ public class SpawnObjectOnSpace : MonoBehaviour
     public void StopSpawning()
     {
         _isSpawnActive = false;
+        //CleanSpawnedObjects();
+    }
+
+    public void ClearSpawning()
+    {
         CleanSpawnedObjects();
     }
 

@@ -42,7 +42,13 @@ public class UIManager : MonoBehaviour
     public static event ClickAction OnClicked;
 
     [SerializeField]
+    GameObject startMenu;
+    [SerializeField]
+    GameObject endMenu;
+    [SerializeField]
     TMPro.TMP_Text playerLabel;
+    [SerializeField]
+    TMPro.TMP_Text winnerLabel;
 
     public void OnButtonPressed(string buttonName)
     {
@@ -66,5 +72,33 @@ public class UIManager : MonoBehaviour
                 playerLabel.text = "Players: 4";
                 break;
         }
+    }
+
+    public void StartMatch()
+    {
+        startMenu.SetActive(false);
+        endMenu.SetActive(false);
+    }
+
+    public void EndMatch(int winner)
+    {
+        startMenu.SetActive(false);
+        
+        if(winner > 0)
+        {
+            winnerLabel.text = "Congratulations\nPlayer " + winner + " won!";
+        }
+        else
+        {
+            winnerLabel.text = "Unlucky\nYou lost!";
+        }
+
+        endMenu.SetActive(true);
+    }
+
+    public void Reset()
+    {
+        startMenu.SetActive(true);
+        endMenu.SetActive(false);
     }
 }
