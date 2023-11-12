@@ -1290,6 +1290,14 @@ PrefabInstance:
       propertyPath: waterObject
       value: 
       objectReference: {fileID: 1464106687}
+    - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
+      propertyPath: obstaclesToSpawn.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6465331814978419621, guid: c8b318865b9a6db439cbeb3c7441f76d, type: 3}
+      propertyPath: obstaclesToSpawn.Array.data[2]
+      value: 
+      objectReference: {fileID: 4577841404136102305, guid: fc5a7bde99153a2439092661fcb3d106, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
