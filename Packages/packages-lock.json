@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.trashpandaboy.core": {
+      "version": "https://github.com/trashpandaboy/TPCore.git#0.0.10",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "c30755aaf61971e6ffba7274756c14b6633536b8"
+    },
     "com.unity.collab-proxy": {
       "version": "2.2.0",
       "depth": 0,
