@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 852707427}
-  m_IndirectSpecularColor: {r: 0.5881132, g: 0.5451832, b: 0.50866187, a: 1}
+  m_IndirectSpecularColor: {r: 0.58952075, g: 0.5458216, b: 0.50819594, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -24195,6 +24195,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 830488815378831218, guid: 12a6abbc192e3ab4687928ff932ac558, type: 3}
+      propertyPath: UseSingleton
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1822407041517386459, guid: 12a6abbc192e3ab4687928ff932ac558, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 12.5
@@ -24304,6 +24308,10 @@ PrefabInstance:
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1514896816}
+    - target: {fileID: 1697346543823293826, guid: c9b774c30e82003439afbbc73815f4a8, type: 3}
+      propertyPath: UseSingleton
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1697346543823293826, guid: c9b774c30e82003439afbbc73815f4a8, type: 3}
       propertyPath: _dieSounds.Array.size
       value: 0

@@ -1,53 +1,13 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using com.trashpandaboy.core;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.TextCore.Text;
 using Random = UnityEngine.Random;
 
-public class GameManager : MonoBehaviour
-{
-    // Declare a private static instance variable
-    private static GameManager instance = null;
-
-    // Create a public accessor that will get the instance
-    public static GameManager Instance
-    {
-        get
-        {
-            // Test if the instance is null
-            // If so, try to get it using FindObjectOfType
-            if (instance == null)
-            {
-                instance = FindObjectOfType<GameManager>();
-            }
-
-            return instance;
-        }
-    }
-
-    // Use Awake to set the instance
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        
-        var cameraTransform = mainCamera.transform;
-        _cameraInitRotation = cameraTransform.rotation;
-        _cameraInitPosition = cameraTransform.position;
-        _cameraYZRatio = Math.Abs(_cameraInitPosition.y / _cameraInitPosition.z);
-    }
-    
-    [SerializeField] private int playerNumber = 0;
+public class GameManager : Manager<GameManager>
+{   
+    [SerializeField] private int playersAmount = 0;
     [SerializeField] private GameObject characterPrefab;
     [SerializeField] private Color[] characterColors;
     [SerializeField] private Vector3[] spawnPositions;
@@ -69,6 +29,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        var cameraTransform = mainCamera.transform;
+        _cameraInitRotation = cameraTransform.rotation;
+        _cameraInitPosition = cameraTransform.position;
+        _cameraYZRatio = Math.Abs(_cameraInitPosition.y / _cameraInitPosition.z);
+
         spawner = FindObjectOfType<SpawnObjectOnSpace>();
         _soundAudioSources = transform.Find("Sound").GetComponents<AudioSource>();
         _musicAudioSources = transform.Find("Music").GetComponents<AudioSource>();
@@ -78,6 +43,7 @@ public class GameManager : MonoBehaviour
     {
         // SceneManager.sceneLoaded += OnSceneLoaded;
         UIManager.OnClicked += OnButtonClicked;
+        UIManager.OnPlayerSelected += PlayerSelected;
     }
 
     /*
@@ -132,6 +98,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void PlayerSelected(int amountOfPlayers)
+    {
+        playersAmount = amountOfPlayers;
+    }
+
     void OnButtonClicked(string buttonName)
     {
         switch (buttonName)
@@ -144,37 +115,21 @@ public class GameManager : MonoBehaviour
             case "Continue":
                 ResetMatch();
                 break;
-
-            case "1 Player":
-                playerNumber = 1;
-                break;
-
-            case "2 Players":
-                playerNumber = 2;
-                break;
-
-            case "3 Players":
-                playerNumber = 3;
-                break;
-
-            case "4 Players":
-                playerNumber = 4;
-                break;
         }
     }
 
     void StartMatch()
     {
-        if (playerNumber > 4)
+        if (playersAmount > 4)
         {
-            playerNumber = 4;
+            playersAmount = 4;
         }
-        else if (playerNumber < 1)
+        else if (playersAmount < 1)
         {
-            playerNumber = 1;
+            playersAmount = 1;
         }
 
-        for (int i = 0; i < playerNumber; i++)
+        for (int i = 0; i < playersAmount; i++)
         {
             Character newPlayer = Instantiate(characterPrefab, spawnPositions[i], Quaternion.identity)
                 .GetComponent<Character>();
@@ -213,7 +168,7 @@ public class GameManager : MonoBehaviour
 
     void ResetMatch()
     {
-        playerNumber = 0;
+        playersAmount = 0;
         oil.ResetPosition();
         spawner.ClearSpawning();
 

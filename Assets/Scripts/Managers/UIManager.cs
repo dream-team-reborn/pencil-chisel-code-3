@@ -1,45 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
+using System;
+using com.trashpandaboy.core;
 using TMPro;
+using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Manager<UIManager>
 {
-    // Declare a private static instance variable
-    private static UIManager instance = null;
-
-    // Create a public accessor that will get the instance
-    public static UIManager Instance
-    {
-        get
-        {
-            // Test if the instance is null
-            // If so, try to get it using FindObjectOfType
-            if (instance == null)
-            {
-                instance = FindObjectOfType<UIManager>();
-            }
-            return instance;
-        }
-    }
-
-    // Use Awake to set the instance
-    void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-            //DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-
-    public delegate void ClickAction(string buttonName);
-    public static event ClickAction OnClicked;
+    public static event Action<string> OnClicked;
+    public static event Action<int> OnPlayerSelected;
 
     [SerializeField]
     GameObject startMenu;
@@ -48,34 +15,21 @@ public class UIManager : MonoBehaviour
     [SerializeField]
     GameObject endMenu;
     [SerializeField]
-    TMPro.TMP_Text playerLabel;
+    TMP_Text playerLabel;
     [SerializeField]
-    TMPro.TMP_Text winnerLabel;
+    TMP_Text winnerLabel;
     [SerializeField]
-    TMPro.TMP_Text timerLabel;
+    TMP_Text timerLabel;
+
+    public void OnPlayerSelectionClicked(int playerAmount)
+    {
+        playerLabel.text = $"Players: {playerAmount}";
+        OnPlayerSelected(playerAmount);
+    }
 
     public void OnButtonPressed(string buttonName)
     {
         OnClicked(buttonName);
-
-        switch (buttonName)
-        {
-            case "1 Player":
-                playerLabel.text = "Players: 1";
-                break;
-
-            case "2 Players":
-                playerLabel.text = "Players: 2";
-                break;
-
-            case "3 Players":
-                playerLabel.text = "Players: 3";
-                break;
-
-            case "4 Players":
-                playerLabel.text = "Players: 4";
-                break;
-        }
     }
 
     public void OnGameUpdate(float timePassed)
@@ -85,14 +39,7 @@ public class UIManager : MonoBehaviour
 
     private void UpdateTimer(int timeToShow)
     {
-        if (timeToShow >= 10)
-        {
-            timerLabel.text = timeToShow.ToString();
-        }
-        else
-        {
-            timerLabel.text = "0" + timeToShow.ToString();
-        }
+        timerLabel.text = $"{timeToShow}".PadLeft(2, '0');
     }
 
     public void StartMatch()
@@ -102,8 +49,6 @@ public class UIManager : MonoBehaviour
         gameMenu.SetActive(true);
         endMenu.SetActive(false);
     }
-
-
 
     public void EndMatch(int winner)
     {
